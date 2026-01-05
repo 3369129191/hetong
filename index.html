@@ -1,677 +1,1154 @@
-// 生成Word文档内容
-function generateWordContent(data) {
-    // 创建产品表格行
-    let productTable = '';
-    
-    data.products.forEach(product => {
-        productTable += `
-        <tr>
-            <td style="font-size: 10pt; font-family: 'Times New Roman', serif;">${product.nameRu}<br>${product.code}<br>${product.hsCode}</td>
-            <td style="font-size: 10pt; font-family: 'Times New Roman', serif; text-align: center;">${product.quantity}</td>
-            <td style="font-size: 10pt; font-family: 'Times New Roman', serif; text-align: center;">${product.price}</td>
-            <td style="font-size: 10pt; font-family: 'Times New Roman', serif; text-align: right;">${product.total}</td>
-            <td style="font-size: 10pt; font-family: 'Times New Roman', serif;">${product.nameEn}<br>${product.code}<br>${product.hsCode}</td>
-            <td style="font-size: 10pt; font-family: 'Times New Roman', serif; text-align: center;">${product.quantity}</td>
-            <td style="font-size: 10pt; font-family: 'Times New Roman', serif; text-align: center;">${product.price}</td>
-            <td style="font-size: 10pt; font-family: 'Times New Roman', serif; text-align: right;">${product.total}</td>
-        </tr>`;
-    });
-    
-    return `
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <meta charset="UTF-8">
-        <style>
-            @page {
-                size: A4;
-                margin: 2cm;
-            }
-            body, table, th, td, div, p {
-                font-family: 'Times New Roman', serif !important;
-                font-size: 10pt !important;
-                line-height: 1.2;
-                margin: 0;
-                padding: 0;
-            }
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                margin: 10px 0;
-                font-family: 'Times New Roman', serif;
-                font-size: 10pt;
-                border: 1px solid #000;
-            }
-            th, td {
-                border: 1px solid #000;
-                padding: 4px;
-                vertical-align: top;
-                text-align: left;
-                font-family: 'Times New Roman', serif;
-                font-size: 10pt;
-            }
-            .contract-table {
-                width: 100%;
-                border: 1px solid #000;
-                font-family: 'Times New Roman', serif;
-                font-size: 10pt;
-            }
-            .contract-table td {
-                border: 1px solid #000;
-                padding: 8px;
-                vertical-align: top;
-                width: 50%;
-                font-family: 'Times New Roman', serif;
-                font-size: 10pt;
-            }
-            .contract-header {
-                text-align: center;
-                margin-bottom: 20px;
-                font-family: 'Times New Roman', serif;
-                font-size: 10pt;
-            }
-            .contract-title {
-                font-size: 12pt !important;
-                font-weight: bold;
-                margin-bottom: 5px;
-                font-family: 'Times New Roman', serif !important;
-            }
-            .contract-subtitle {
-                font-size: 10pt !important;
-                margin-bottom: 10px;
-                font-family: 'Times New Roman', serif !important;
-            }
-            .section-title {
-                font-weight: bold;
-                margin-top: 15px;
-                margin-bottom: 5px;
-                font-size: 10pt !important;
-                font-family: 'Times New Roman', serif !important;
-            }
-            .clause-title {
-                font-weight: bold;
-                margin-top: 10px;
-                font-family: 'Times New Roman', serif;
-                font-size: 10pt;
-            }
-            .signature-section {
-                margin-top: 50px;
-                font-family: 'Times New Roman', serif;
-                font-size: 10pt;
-            }
-            .signature-block {
-                margin-top: 30px;
-                font-family: 'Times New Roman', serif;
-                font-size: 10pt;
-            }
-            .bank-details {
-                font-size: 9pt !important;
-                line-height: 1.3;
-                font-family: 'Times New Roman', serif !important;
-            }
-            .mark {
-                background-color: #ffffcc;
-                padding: 0 2px;
-            }
-            .page-break {
-                page-break-after: always;
-            }
-            .full-width-table {
-                width: 100%;
-                border: 1px solid #000;
-                font-family: 'Times New Roman', serif;
-                font-size: 10pt;
-            }
-            .full-width-table th, .full-width-table td {
-                font-family: 'Times New Roman', serif;
-                font-size: 10pt;
-            }
-            .left-column {
-                width: 50%;
-                padding-right: 10px;
-                vertical-align: top;
-            }
-            .right-column {
-                width: 50%;
-                padding-left: 10px;
-                vertical-align: top;
-            }
-            .clause-table {
-                width: 100%;
-                border: 1px solid #000;
-                margin-bottom: 10px;
-                font-family: 'Times New Roman', serif;
-                font-size: 10pt;
-            }
-            .clause-table td {
-                border: 1px solid #000;
-                padding: 8px;
-                vertical-align: top;
-                width: 50%;
-                font-family: 'Times New Roman', serif;
-                font-size: 10pt;
-            }
-            .no-border-table {
-                width: 100%;
-                border: none;
-                font-family: 'Times New Roman', serif;
-                font-size: 10pt;
-            }
-            .no-border-table td {
-                border: none;
-                padding: 0;
-                vertical-align: top;
-                width: 50%;
-                font-family: 'Times New Roman', serif;
-                font-size: 10pt;
-            }
-            .separator {
-                height: 50px;
-                border: none;
-                background-color: white;
-            }
-            .large-separator {
-                height: 80px;
-                border: none;
-                background-color: white;
-            }
-        </style>
-    </head>
-    <body style="font-family: 'Times New Roman', serif; font-size: 10pt;">
-        <!-- 合同头部表格 -->
-        <table class="clause-table">
-            <tr>
-                <td style="width: 50%; border-right: 1px solid #000; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="contract-header">
-                        <div class="contract-title">КОНТРАКТ № ${data.contractNo}</div>
-                        <div class="contract-subtitle">${data.contractDate}</div>
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>外贸货物合同自动化生成工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Times New Roman', serif;
+        }
+        
+        body {
+            padding: 20px;
+            background-color: #f5f5f5;
+            line-height: 1.4;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        
+        .section-title {
+            font-size: 1.2rem;
+            color: #2980b9;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #ddd;
+            font-weight: bold;
+        }
+        
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+            gap: 15px;
+        }
+        
+        .form-group {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+            font-size: 0.95rem;
+        }
+        
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            font-family: 'Times New Roman', serif;
+        }
+        
+        .form-group textarea {
+            min-height: 60px;
+            resize: vertical;
+        }
+        
+        .product-section {
+            margin-top: 20px;
+        }
+        
+        .product-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .product-field {
+            flex: 1;
+            min-width: 180px;
+        }
+        
+        .product-field label {
+            font-size: 0.85rem;
+            font-weight: normal;
+            color: #666;
+        }
+        
+        .buttons {
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        .generate-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 40px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .generate-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .note {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin-top: 10px;
+            text-align: center;
+        }
+        
+        .input-small {
+            width: 120px;
+        }
+        
+        .remove-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            align-self: flex-end;
+            height: 30px;
+        }
+        
+        .add-product-btn {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>外贸货物合同自动化生成工具</h1>
+        
+        <div class="form-section">
+            <div class="section-title">1. 合同基本信息</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="contractNo">合同编号 (Contract No.):</label>
+                    <input type="text" id="contractNo" value="25YBZ058">
+                </div>
+                <div class="form-group">
+                    <label for="contractDate">合同日期 (Contract Date):</label>
+                    <input type="text" id="contractDate" value="27 декабря 2025г. / 27 December 2025">
+                </div>
+                <div class="form-group">
+                    <label for="contractCity">合同签订城市 (Contract City):</label>
+                    <input type="text" id="contractCity" value="г. Москва / Moscow">
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <div class="section-title">2. 卖方信息 (Продавец / Seller)</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="sellerNameRu">公司名称 (俄语):</label>
+                    <input type="text" id="sellerNameRu" value="ООО «Чжуцзи Ибайчжоу Импорт энд Экспорт»">
+                </div>
+                <div class="form-group">
+                    <label for="sellerNameEn">公司名称 (英语):</label>
+                    <input type="text" id="sellerNameEn" value="ZHUJI YIBAIZHOU IMPORT AND EXPORT CO.,LTD.">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="sellerRepRu">代表人 (俄语):</label>
+                    <input type="text" id="sellerRepRu" value="Шао Хао">
+                </div>
+                <div class="form-group">
+                    <label for="sellerRepEn">代表人 (英语):</label>
+                    <input type="text" id="sellerRepEn" value="Shao Hao">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="sellerTitleRu">职务 (俄语):</label>
+                    <input type="text" id="sellerTitleRu" value="Генеральный директор">
+                </div>
+                <div class="form-group">
+                    <label for="sellerTitleEn">职务 (英语):</label>
+                    <input type="text" id="sellerTitleEn" value="General Director">
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <div class="section-title">3. 买方信息 (Покупатель / Buyer)</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="buyerNameRu">公司名称 (俄语):</label>
+                    <input type="text" id="buyerNameRu" value="Общество с ограниченной ответственностью «КЭЧЖАНЬ»">
+                </div>
+                <div class="form-group">
+                    <label for="buyerNameEn">公司名称 (英语):</label>
+                    <input type="text" id="buyerNameEn" value="Limited Liability Company 'KEQZHAN'">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="buyerRepRu">代表人 (俄语):</label>
+                    <input type="text" id="buyerRepRu" value="Ма Жунцзюнь">
+                </div>
+                <div class="form-group">
+                    <label for="buyerRepEn">代表人 (英语):</label>
+                    <input type="text" id="buyerRepEn" value="Ma RongJun">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="buyerTitleRu">职务 (俄语):</label>
+                    <input type="text" id="buyerTitleRu" value="Директор">
+                </div>
+                <div class="form-group">
+                    <label for="buyerTitleEn">职务 (英语):</label>
+                    <input type="text" id="buyerTitleEn" value="Director">
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <div class="section-title">4. 货物信息 (Товар / Goods)</div>
+            <div id="products-container">
+                <div class="product-row">
+                    <div class="product-field">
+                        <label>货物名称 (俄语):</label>
+                        <input type="text" class="product-name-ru" value="ЗАНАВЕСКА ДЛЯ ВАННОЙ ИЗ ПОЛИЭСТЕРА">
                     </div>
-                </td>
-                <td style="width: 50%; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="contract-header">
-                        <div class="contract-title">CONTRACT № ${data.contractNo}</div>
-                        <div class="contract-subtitle">${data.contractDate.split(' / ')[1] || data.contractDate}</div>
+                    <div class="product-field">
+                        <label>货物名称 (英语):</label>
+                        <input type="text" class="product-name-en" value="POLYESTER SHOWER CURTAIN">
                     </div>
-                </td>
-            </tr>
-        </table>
-        
-        <!-- 合同介绍表格 -->
-        <table class="clause-table">
-            <tr>
-                <td style="width: 50%; border-right: 1px solid #000; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">${data.sellerNameRu}, именуемая в дальнейшем "Продавец", в лице ${data.sellerTitleRu} ${data.sellerRepRu} с одной стороны, и ${data.buyerNameRu}, Россия, в лице ${data.buyerTitleRu} ${data.buyerRepRu}, именуемое в дальнейшем "Покупатель" действующего на основании устава, с другой стороны, заключили настоящий контракт о нижеследующем:</p>
-                </td>
-                <td style="width: 50%; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">The company "${data.sellerNameEn}", China, hereinafter referred to as the "Seller", represented by ${data.sellerTitleEn} ${data.sellerRepEn}, on the one hand, and the ${data.buyerNameEn}, Russia, represented by ${data.buyerTitleEn} ${data.buyerRepEn}, hereinafter referred to as the "Buyer", acting on the basis of its Charter, on the other hand, have concluded this Contract as follows:</p>
-                </td>
-            </tr>
-        </table>
-        
-        <!-- 第1条表格 -->
-        <table class="clause-table">
-            <tr>
-                <td style="width: 50%; border-right: 1px solid #000; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="section-title">1. Предмет Контракта</div>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">1.1. Продавец поставляет товары в ассортименте, в количестве и по ценам, определяемым в Приложениях к настоящему контракту, являющих его неотъемлемой частью.</p>
-                </td>
-                <td style="width: 50%; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="section-title">1. Subject of the Contract</div>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">1.1. The Seller shall supply goods in the assortment, quantity, and at the prices specified in the Annexes to this Contract, which constitute its integral part.</p>
-                </td>
-            </tr>
-        </table>
-        
-        <!-- 第2条表格 -->
-        <table class="clause-table">
-            <tr>
-                <td style="width: 50%; border-right: 1px solid #000; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="section-title">2. Цена и общая сумма контракта</div>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">2.1. Цены на товары выражены в китайских юанях.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">2.2. По согласованию сторон данный Контракт не имеет общей стоимости (Цены). Цены на товары устанавливаются в Приложении к настоящему Контракту и Инвойсе для каждой отдельной партии товара.</p>
-                </td>
-                <td style="width: 50%; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="section-title">2. Price and Total Contract Amount</div>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">2.1. Prices of goods are expressed in Chinese yuan (CNY).</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">2.2. By agreement of the parties, this Contract has no total price (Price). Prices for goods are set in the Appendix to this Contract and the Invoice for each individual batch of goods.</p>
-                </td>
-            </tr>
-        </table>
-        
-        <!-- 第3条表格 -->
-        <table class="clause-table">
-            <tr>
-                <td style="width: 50%; border-right: 1px solid #000; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="section-title">3. Условия платежа</div>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">3.1. Платеж по настоящему контракту осуществляется Покупателем в течение 90 (девяноста) календарных дней с момента выставления инвойса и подтверждения отгрузки.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">3.2. Товар оплачивается Покупателем в следующем порядке: Покупатель оплачивает напрямую на банковский счёт Продавца, указанный в настоящем Контракте.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">3.3. В связи с международными санкциями, по соглашению между Покупателем и Продавцом любая из сторон может назначить агента в соответствии с агентским соглашением для получения и оплаты через агента.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">3.4. После подписания сторонами Приложения расходы, связанные с его изменением и/или дополнением по инициативе Покупателя, возлагаются на Покупателя.</p>
-                </td>
-                <td style="width: 50%; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="section-title">3. Payment Terms</div>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">3.1. Payment under this Contract shall be made by the Buyer within 90 (ninety) calendar days from the date of invoice issuance and shipment confirmation.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">3.2. The goods shall be paid for by the Buyer in the following manner: The Buyer shall make payments directly to the Seller's bank account specified in this Contract.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">3.3. Due to international sanctions, by agreement between the Buyer and the Seller, either party may appoint an agent pursuant to an agency agreement for the receipt and payment through the agent.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">3.4. After the Appendix is signed by the parties, any expenses related to its amendment and/or supplementation at the initiative of the Buyer shall be borne by the Buyer.</p>
-                </td>
-            </tr>
-        </table>
-        
-        <!-- 第4条表格 -->
-        <table class="clause-table">
-            <tr>
-                <td style="width: 50%; border-right: 1px solid #000; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="section-title">4. Техническая документация</div>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">4.1. С даты заказа Продавец обязан передать Покупателю следующую техническую документацию:</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">4.1.1. Описание Товара.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">4.1.2. Условия испытаний Товара.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">4.1.3. Инструкции по монтажу, наладке, пуску в эксплуатацию, обслуживанию, регулировке, смазке и ремонту Товара.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">4.4. Вся техническая документация (инструкции, технические условия и др.) должна быть выполнена на английском или китайском языке.</p>
-                </td>
-                <td style="width: 50%; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="section-title">4. Technical Documentation</div>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">4.1. From the date of order, the Seller shall provide the Buyer with the following technical documentation:</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">4.1.1. Description of the Goods.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">4.1.2. Terms of testing the Goods.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">4.1.3. Instructions for installation, adjustment, commissioning, maintenance, regulation, lubrication, and repair of the Goods.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">4.1.4. All technical documentation (instructions, technical specifications, etc.) shall be provided in English or Chinese.</p>
-                </td>
-            </tr>
-        </table>
-        
-        <!-- 第5条表格 -->
-        <table class="clause-table">
-            <tr>
-                <td style="width: 50%; border-right: 1px solid #000; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="section-title">5. Качество Товара</div>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">5.1. Качество Товара должно соответствовать действующим стандартам, действующим в стране Покупателя для данного вида оборудования.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">5.2. Подтверждением качества со стороны Продавца является сертификат качества изготовителя Товара, который Продавец обязан предоставить Покупателю одновременно с поставкой Товара.</p>
-                </td>
-                <td style="width: 50%; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="section-title">5. Quality of the Goods</div>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">5.1. The quality of the Goods shall comply with the applicable standards in the Buyer's country for this type of equipment.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">5.2. The Seller's confirmation of quality shall be the manufacturer's quality certificate, which the Seller is obliged to provide to the Buyer simultaneously with the delivery of the Goods.</p>
-                </td>
-            </tr>
-        </table>
-        
-        <!-- 第6条表格 -->
-        <table class="clause-table">
-            <tr>
-                <td style="width: 50%; border-right: 1px solid #000; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="section-title">6. Сроки и условия поставки</div>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">6.1. Товар поставляется партиями по согласованному сторонами графику на условиях EXW, FCA, FOB, CIF, CPT, DAP, DDP, которые определяются в предварительных счетах и приложениях для каждой отдельной партии товара.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">6.2. Датой заказа Товара Покупателем считается день подписания приложения.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">6.3. Товар должен быть готов к поставке не позднее чем через 60 календарных дней после подписания приложения.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">6.4. О конкретной дате поставки Продавец письменно извещает Покупателя. Дата поставки считается согласованной сторонами, если Продавец получил от Покупателя соответствующее письменное подтверждение. Указанные в настоящем пункте извещения (подтверждения) должны быть изложены на русском языке и направлены посредством факсимильной или электронной почты по адресам (телефонам), указанным в Контракте. Сторона, получившая соответствующее извещение, обязана незамедлительно подтвердить факт его получения.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">6.5. Датой поставки Товара считается день подписания Покупателем или перевозчиком Покупателя товарно-транспортной накладной после погрузки. Товар поставляется транспортом на условиях поставки, согласованных в Спецификации. Определение и интерпретация терминов условий поставки осуществляются в соответствии с Международными правилами «Инкотермс-2010».</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">6.6. Если отдельные условия Контракта противоречат условиям Международных правил «Инкотермс-2010», преимущественную силу имеют условия Контракта.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">6.7. Покупатель отвечает за погрузку Товара по согласованным условиям согласно пункту 6.1. При этом Продавец не несёт ответственности за несвоевременную отгрузку по причинам, не зависящим от Продавца (например, неприбытие или несвоевременное прибытие транспорта под погрузку), задержку на таможне воздушного судна, перевозящего Товар, а также за связанные с этим убытки Покупателя.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">6.8. Продавец обязан письменно (факсимильной или электронной почтой) сообщить Покупателю об отгрузке в течение двадцати четырёх часов с момента её завершения и получения квитанции от грузоперевозчика.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">6.9. Приёмка Товара по количеству и качеству осуществляется Покупателем в порядке, установленном законодательством, действующим на территории Китая.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">6.10. Продавец должен предоставить Покупателю (или перевозчику Покупателя) вместе с Товаром следующую документацию:</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">6.10.1. Инвойс;</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">6.10.2. Упаковочный лист;</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">6.10.3. Копию экспортной декларации.</p>
-                </td>
-                <td style="width: 50%; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="section-title">6. Delivery Terms and Conditions</div>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">6.1. The Goods shall be delivered in batches according to the schedule agreed by the parties on the terms EXW, FCA, FOB, CIF, CPT, DAP, DDP, which are specified in the pro forma invoices and appendices for each individual batch of goods.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">6.2. The order date of the Goods by the Buyer is considered the date of signing the appendix.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">6.3. The Goods shall be ready for delivery no later than 60 calendar days after signing the appendix.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">6.4. The Seller shall notify the Buyer in writing of the specific delivery date. The delivery date shall be deemed agreed upon by the parties once the Seller receives the corresponding written confirmation from the Buyer. Such notices (confirmations) mentioned in this clause shall be provided in Russian and sent via fax or email to the addresses (phone numbers) specified in the Contract. The party receiving such notice must promptly confirm its receipt.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">6.5. The delivery date of the Goods shall be considered the day when the Buyer or the Buyer's carrier signs the consignment note after loading. The Goods shall be delivered by transport under the delivery terms agreed in the Specification. The definition and interpretation of delivery terms shall be in accordance with the International Commercial Terms "Incoterms 2010."</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">6.6. If any provisions of the Contract contradict the terms of the International Commercial Terms "Incoterms 2010," the provisions of the Contract shall prevail.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">6.7. The Buyer is responsible for loading the Goods under the agreed terms according to clause 6.1. The Seller shall not be liable for delayed shipment due to reasons beyond the Seller's control (e.g., failure or untimely arrival of transport for loading), customs delay of the aircraft transporting the Goods, as well as related losses of the Buyer.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">6.8. The Seller shall notify the Buyer in writing (via fax or email) of the shipment within twenty-four hours after its completion and receipt of the receipt from the carrier.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">6.9. Acceptance of the Goods in terms of quantity and quality shall be carried out by the Buyer in accordance with the laws applicable in the territory of China.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">6.10. The Seller shall provide the Buyer (or the Buyer's carrier) with the following documents along with the Goods:</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">6.10.1. Invoice;</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">6.10.2. Packing list;</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">6.10.3. Copy of the export declaration.</p>
-                </td>
-            </tr>
-        </table>
-        
-        <!-- 第7条表格 -->
-        <table class="clause-table">
-            <tr>
-                <td style="width: 50%; border-right: 1px solid #000; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="section-title">7. Гарантийные обязательства Продавца</div>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">7.1. Продавец гарантирует отсутствие дефектов Товара в течение одного года с даты получения Товара Покупателем.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">7.2. Никакое оборудование из перечисленного груза не должно быть возвращено на ремонт или замену Продавцу без письменного разрешения последнего. Все гарантийные требования должны быть предоставлены Продавцу в письменной форме.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">7.3. Настоящие гарантийные обязательства не покрывают дефекты и повреждения, вызванные несанкционированными Продавцом переделками, неправильными ремонтными работами или техническим обслуживанием, проведёнными Покупателем или третьими лицами без согласия Продавца, а так же неправильной эксплуатацией оборудования перечисленного груза Покупателем. Ремонт, произведённый без письменного согласия Продавца не оплачивается.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">7.4. Продавец не предоставляет гарантий, кроме прямо сформулированных в Контракте, и не гарантирует исполнение заверений и обещаний, высказанных в устной или письменной форме не уполномоченных на то агентов и/или работников Продавца.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">7.5. Оборудование из перечисленного груза должно эксплуатироваться в соответствии с инструкциями, изданными Продавцом и доведенными до Покупателя. В противном случае настоящие гарантийные обязательства являются недействительными.</p>
-                </td>
-                <td style="width: 50%; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="section-title">7. Warranty obligations of the Seller</div>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">7.1. The Seller guarantees the absence of defects in the Goods for one year from the date of receipt of the Goods by the Buyer.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">7.2. No equipment from the listed cargo should be returned for repair or replacement to the Seller without the written permission of the latter. All warranty claims must be provided to the Seller in writing.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">7.3. These warranty obligations do not cover defects and damages caused by alterations unauthorized by the Seller, improper repairs or maintenance performed by the Buyer or third parties without the Seller's consent, as well as improper operation of the equipment listed by the Buyer. Repairs made without the Seller's written consent will not be paid for.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">7.4. The Seller does not provide guarantees other than those expressly stated in the Contract, and does not guarantee the fulfillment of assurances and promises expressed orally or in writing by unauthorized agents and/or employees of the Seller.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">7.5. Equipment from the listed cargo must be operated in accordance with the instructions issued by the Seller and communicated to the Buyer. Otherwise, these warranty obligations are invalid.</p>
-                </td>
-            </tr>
-        </table>
-        
-        <!-- 第8条表格 -->
-        <table class="clause-table">
-            <tr>
-                <td style="width: 50%; border-right: 1px solid #000; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="section-title">8. Ответственность сторон</div>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">8.1. В случае отмены заказа Покупателем по причинам, не связанным с нарушением Продавцом принятых на себя по Контракту обязательств, сумма полученного Продавцом аванса Покупателю не возвращается.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">8.2. Если Продавец по причинам, не зависящим от Покупателя, задержал срок поставки Товара более чем на 15 календарных дней от согласованной сторонами даты поставки, указанной в п. 6.4. настоящего Контракта, Покупатель вправе расторгнуть Контракт в одностороннем порядке. При этом денежные средства, предварительно уплаченные Покупателем за Товар, должны быть перечислены Продавцом на расчетный счет Покупателя не позднее пяти рабочих дней с момента получения Продавцом соответствующего письменного уведомления от Покупателя.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">8.3. В случае нарушения Продавцом обязанности по возврату денежных средств Покупателю, предусмотренной п. 8.2. Контракта. Продавец обязан по требованию Покупателя выплатить последнему пению в размере 0,15 процента от суммы задолженности за каждый день просрочки. Общий размер пени, предусмотренной в настоящем пункте, не может превышать 25 % от цены Товара.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">8.4. Продавец несет ответственность перед Покупателем за порчу Товара из-за некачественной или ненадлежащей консервации и упаковки, а также за убытки, связанные с отправкой Товара не по адресу из-за неполноценной или неправильной маркировки.</p>
-                </td>
-                <td style="width: 50%; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="section-title">8. Liability of the parties</div>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">8.1. In case of cancellation of the order by the Buyer for reasons unrelated to the violation of contractual obligations by the Seller, the amount of the advance received by the Seller will not be refunded to the Buyer.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">8.2. If, for reasons beyond the Buyer's control, the Seller has delayed the delivery of the Goods by more than 15 calendar days from the delivery date agreed by the parties specified in clause 6.4. of this Contract, the Buyer has the right to terminate the Contract unilaterally. In this case, the funds previously paid by the Buyer for the Goods must be transferred by the Seller to the Buyer's current account no later than five business days after the Seller receives the relevant written notification from the Buyer.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">8.3. In case of violation by the Seller of the obligation to refund funds to the Buyer provided for in clause 8.2. of the Contract. The Seller is obliged, at the request of the Buyer, to pay the last song in the amount of 0.15 percent of the amount owed for each day of delay. The total amount of the penalty provided for in this paragraph may not exceed 25% of the price of the Goods.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">8.4. The Seller is liable to the Buyer for damage to the Goods due to poor-quality or improper preservation and packaging, as well as for losses related to the shipment of the Goods to the wrong address due to defective or incorrect labeling.</p>
-                </td>
-            </tr>
-        </table>
-        
-        <!-- 第9条表格 -->
-        <table class="clause-table">
-            <tr>
-                <td style="width: 50%; border-right: 1px solid #000; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="section-title">9. Форс-мажор</div>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">9.1. Стороны освобождаются от ответственности за частичное или полное неисполнение обязательств по Контракту, если такое неисполнение вызвано наступлением обстоятельства непреодолимой силы (пожар, наводнение, землетрясение, запрещение импорта или экспорта, а также иные причины, которые не могут контролироваться сторонами).</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">9.2. По согласованию сторон срок исполнения обязательств по Контракту отодвигается соразмерно времени, в течение которого действовало обстоятельство непреодолимой силы.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">9.3. Сторона, на территории которой случилось обстоятельство непреодолимой силы, обязана в течение 10 (десять) дней с момента возникновения такового письменно известить другую сторону о характере непреодолимой силы и ее влияния на исполнение Контракта.</p>
-                </td>
-                <td style="width: 50%; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="section-title">9. Force Majeure</div>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">9.1. The Parties are released from liability for partial or complete non-fulfillment of obligations under the Contract if such non-fulfillment is caused by the occurrence of force majeure (fire, flood, earthquake, prohibition of import or export, as well as other reasons that cannot be controlled by the parties).</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">9.2. By agreement of the parties, the deadline for fulfillment of obligations according to the Contract, it is postponed in proportion to the time during which the force majeure circumstance was in effect.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">9.3. The Party in whose territory the force majeure event occurred is obliged to notify the other party in writing about the nature of the force majeure and its impact on the performance of the Contract within 10 (ten) days from the date of occurrence.</p>
-                </td>
-            </tr>
-        </table>
-        
-        <!-- 第10条表格 -->
-        <table class="clause-table">
-            <tr>
-                <td style="width: 50%; border-right: 1px solid #000; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="section-title">10. Срок действия Контракта</div>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">10.1. Контракт вступает в силу с момента подписания его сторонами и действует до 31 декабря 2025 г.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">10.2. В том случае, если не менее чем за 14 (четырнадцать) дней до истечения срока действия настоящего Договора ни одна из сторон не заявит о своем намерении расторгнуть Договор, его действие автоматически пролонгируется на каждый последующий календарный год.</p>
-                </td>
-                <td style="width: 50%; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="section-title">10. Term of the Contract</div>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">10.1. The Contract comes into force from the moment it is signed by the parties and is valid until December 31, 2025.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">10.2. In the event that none of the parties declares its intention to terminate the Contract at least 14 (fourteen) days before the expiration of this Agreement, its effect is automatic it is extended for each subsequent calendar year.</p>
-                </td>
-            </tr>
-        </table>
-        
-        <!-- 第11条表格 -->
-        <table class="clause-table">
-            <tr>
-                <td style="width: 50%; border-right: 1px solid #000; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="section-title">11. Применимое право, арбитраж</div>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">11.1. Правом, регулирующим Контракт, является материальное право Российской Федерации.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">11.2. Все споры и разногласия, которые могут возникнуть по Контракту или в связи с его исполнением, будут по возможности разрешаться путем переговоров между сторонами. Сторона, получившая Претензию, должна ее рассмотреть и направить другой стороне письменный мотивированный ответ течение 7 (семи) календарных дней с момента получения претензии.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">11.3. В случае если стороны не придут к соглашению, спор подлежит разрешению в Международном коммерческом арбитражном суде при торгово-промышленной палате Китая в соответствии с Арбитражным процессуальным кодексом Китая.</p>
-                </td>
-                <td style="width: 50%; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="section-title">11. Applicable law, arbitration</div>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">11.1. The law governing the Contract is the substantive law of the Russian Federation.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">11.2. All disputes and disagreements that may arise under the Contract or in connection with its execution will, if possible, be resolved through negotiations between the parties. The party receiving the Claim must review it and send a written reasoned response to the other party within 7 (seven) calendar days from the date of receipt of the claim.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">11.3. If the parties do not reach an agreement, the dispute is subject to resolution in the International Commercial Arbitration Court at the Chinese Chamber of Commerce and Industry in accordance with the Arbitration Procedure Code of China.</p>
-                </td>
-            </tr>
-        </table>
-        
-        <!-- 第12条表格 -->
-        <table class="clause-table">
-            <tr>
-                <td style="width: 50%; border-right: 1px solid #000; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="section-title">12. Прочие условия</div>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">12.1. Условия Контракта имеют равную обязательную силу для сторон и могут быть изменены по взаимному согласию с обязательным составлением письменного документа.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">12.2. Ни одна из сторон не вправе передать свои права по Контракту третьей стороне без письменного согласия другой стороне.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">12.3. Контракт составлен на русском и китайском языке в двух экземплярах, по одному для каждой из сторон.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">12.4. Стороны обязуются незамедлительно письменно извещать друг друга о всех изменениях своих банковских и отгрузочных реквизитов.</p>
-                </td>
-                <td style="width: 50%; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="section-title">12. Other terms</div>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">12.1. The terms of the Contract are equally binding on the parties and may be amended by mutual agreement with the mandatory preparation of a written document.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">12.2. Neither party has the right to transfer its rights under the Contract to a third party without the written consent of the other party.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">12.3. The Contract is drawn up in Russian and Chinese in two copies, one for each of the parties.</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">12.4. The parties undertake to immediately notify each other in writing of all changes to their bank and shipping details.</p>
-                </td>
-            </tr>
-        </table>
-        
-        <!-- 第13部分 - 地址、银行信息和签名 -->
-        <div class="page-break"></div>
-        
-        <!-- 第13条标题表格 - 左右分开 -->
-        <table class="clause-table">
-            <tr>
-                <td style="width: 50%; border-right: 1px solid #000; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="section-title">13. Адреса, реквизиты и подписи сторон</div>
-                </td>
-                <td style="width: 50%; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="section-title">13. Address, details and signatures of the parties</div>
-                </td>
-            </tr>
-        </table>
-        
-        <!-- 卖方信息表格 -->
-        <table class="clause-table">
-            <tr>
-                <td style="width: 50%; border-right: 1px solid #000; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt; font-weight: bold;">Продавец: ${data.sellerNameRu}</p>
-                    <div class="bank-details">
-                        <p style="font-family: 'Times New Roman', serif; font-size: 9pt;">Юр.адрес: ${data.sellerAddressRu}</p>
-                        <p style="font-family: 'Times New Roman', serif; font-size: 9pt;">ИНН: ${data.sellerTIN}</p>
-                        <p style="font-family: 'Times New Roman', serif; font-size: 9pt;">${data.sellerBankInfo}</p>
-                        <p style="font-family: 'Times New Roman', serif; font-size: 9pt;">Адрес банка: 2503-2505, Шанхайская башня, № 501, Мидл Иньчэн Роуд, Новый район Пудун, Шанхай. Китай</p>
+                    <div class="product-field">
+                        <label>型号/代码:</label>
+                        <input type="text" class="product-code" value="WSC-D-180180-Grey">
                     </div>
-                    <br><br><br>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">Поставщик: ___________________________</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">Генеральный директор (подпись): ___________________________</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">${data.sellerRepRu}</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">М.П.</p>
-                </td>
-                <td style="width: 50%; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt; font-weight: bold;">Seller: ${data.sellerNameEn}</p>
-                    <div class="bank-details">
-                        <p style="font-family: 'Times New Roman', serif; font-size: 9pt;">Legal address: ${data.sellerAddressEn}</p>
-                        <p style="font-family: 'Times New Roman', serif; font-size: 9pt;">TIN: ${data.sellerTIN}</p>
-                        <p style="font-family: 'Times New Roman', serif; font-size: 9pt;">${data.sellerBankInfoEn}</p>
-                        <p style="font-family: 'Times New Roman', serif; font-size: 9pt;">Bank Address: 2503-2505, Shanghai Tower, No. 501, Middle Yincheng Road, Pudong New Area, Shanghai, China</p>
+                    <div class="product-field">
+                        <label>海关代码:</label>
+                        <input type="text" class="product-hs-code" value="6303929000">
                     </div>
-                    <br><br><br>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">Supplier (stamped): ___________________________</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">General Manager (Signature): ___________________________</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">${data.sellerRepEn}</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">М.P.</p>
-                </td>
-            </tr>
-        </table>
-        
-        <!-- 买方信息表格 -->
-        <table class="clause-table">
-            <tr>
-                <td style="width: 50%; border-right: 1px solid #000; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt; font-weight: bold;">Покупатель: ${data.buyerNameRu}</p>
-                    <div class="bank-details">
-                        <p style="font-family: 'Times New Roman', serif; font-size: 9pt;">ИНН: ${data.buyerTIN}</p>
-                        <p style="font-family: 'Times New Roman', serif; font-size: 9pt;">КПП: ${data.buyerKPP}</p>
-                        <p style="font-family: 'Times New Roman', serif; font-size: 9pt;">ОГРН: ${data.buyerOGRN}</p>
-                        <p style="font-family: 'Times New Roman', serif; font-size: 9pt;">Юридический адрес: ${data.buyerAddressRu}</p>
-                        <p style="font-family: 'Times New Roman', serif; font-size: 9pt; font-weight: bold;">Банковские реквизиты:</p>
-                        <p style="font-family: 'Times New Roman', serif; font-size: 9pt;">${data.buyerBankInfo}</p>
+                    <div class="product-field">
+                        <label>数量 (шт):</label>
+                        <input type="number" class="product-quantity" value="1076">
                     </div>
-                    <br><br><br>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">Покупатель: ___________________________</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">Генеральный директор (подпись): ___________________________</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">${data.buyerRepRu}</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">М.П.</p>
-                </td>
-                <td style="width: 50%; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt; font-weight: bold;">Buyer: ${data.buyerNameEn}</p>
-                    <div class="bank-details">
-                        <p style="font-family: 'Times New Roman', serif; font-size: 9pt;">INN: ${data.buyerTIN}</p>
-                        <p style="font-family: 'Times New Roman', serif; font-size: 9pt;">KPP: ${data.buyerKPP}</p>
-                        <p style="font-family: 'Times New Roman', serif; font-size: 9pt;">OGRN: ${data.buyerOGRN}</p>
-                        <p style="font-family: 'Times New Roman', serif; font-size: 9pt;">Legal address: ${data.buyerAddressEn}</p>
-                        <p style="font-family: 'Times New Roman', serif; font-size: 9pt; font-weight: bold;">Bank details:</p>
-                        <p style="font-family: 'Times New Roman', serif; font-size: 9pt;">${data.buyerBankInfoEn}</p>
+                    <div class="product-field">
+                        <label>单价 (CNY):</label>
+                        <input type="number" step="0.01" class="product-price" value="12.96">
                     </div>
-                    <br><br><br>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">Buyer (stamped): ___________________________</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">General Manager (Signature): ___________________________</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">${data.buyerRepEn}</p>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">М.P.</p>
-                </td>
-            </tr>
-        </table>
+                    <button type="button" class="remove-btn" onclick="removeProduct(this)">删除</button>
+                </div>
+            </div>
+            <button type="button" class="add-product-btn" onclick="addProduct()">+ 添加产品</button>
+        </div>
         
-        <!-- ********** 这里是分隔部分 - 大的空白行 ********** -->
-        <div class="large-separator"></div>
+        <div class="form-section">
+            <div class="section-title">5. 银行信息 (Банковские реквизиты / Bank Details)</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="sellerBankInfo">卖方银行信息 (俄语):</label>
+                    <textarea id="sellerBankInfo">Наименование банка: БАНК ВТБ (ПАО) ШАНХАЙСКИЙ ФИЛИАЛ Расчетный счет: 40807156300610027374 SWIFT: VTRRCNSH Банк-корреспондент банка-получателя: ВТБ Банк МОСКВА ШАНХАЙСКИЙ ФИЛИАЛ Расчетный счет: 30101810700000000187 БИК: 044525187 ИНН: 7702070139 КПП: 997950001</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="sellerBankInfoEn">卖方银行信息 (英语):</label>
+                    <textarea id="sellerBankInfoEn">Bank name: VTB BANK (PAO) SHANGHAI BRANCH Current account: 40807156300610027374 SWIFT: VTBRCNSH Correspondent bank of the recipient bank: VTB Bank MOSCOW SHANGHAI BRANCH Payment account: 30101810700000000187 BIC: 044525187 INN: 7702070139 P.O. Box: 997950001</textarea>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="buyerBankInfo">买方银行信息 (俄语):</label>
+                    <textarea id="buyerBankInfo">Наименование банка: Ф И Л И А Л "ЦЕНТРАЛЬНЫЙ" БАНКА ВТБ (ПАО) БИК: 044525411 к/с: 30101810145250000411 р/с: 40702810300810101714</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="buyerBankInfoEn">买方银行信息 (英语):</label>
+                    <textarea id="buyerBankInfoEn">Bank name: "Central" Branch of VTB Bank (PAO) BIC: 044525411 Correspondent Account: 30101810145250000411 Current Account: 40702810300810101714</textarea>
+                </div>
+            </div>
+        </div>
         
-        <!-- 规格表标题表格 - 新的独立表格 -->
-        <table class="clause-table">
-            <tr>
-                <td style="width: 50%; border-right: 1px solid #000; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="contract-header">
-                        <div class="contract-title">Спецификация № 1</div>
-                        <div class="contract-subtitle">к договору поставки №${data.contractNo} от 30.12.2025г. Москва, Россия</div>
-                    </div>
-                </td>
-                <td style="width: 50%; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="contract-header">
-                        <div class="contract-title">Specification №1</div>
-                        <div class="contract-subtitle">to supply agreement No.${data.contractNo} от 30.12.2025 Moscow, Russia</div>
-                    </div>
-                </td>
-            </tr>
-        </table>
+        <div class="form-section">
+            <div class="section-title">6. 其他信息</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="deliveryBasis">交货基础 (俄语):</label>
+                    <input type="text" id="deliveryBasisRu" value="FOB Шаосин, Китай.">
+                </div>
+                <div class="form-group">
+                    <label for="deliveryBasisEn">交货基础 (英语):</label>
+                    <input type="text" id="deliveryBasisEn" value="FOB Shaoxing, CHINA.">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="sellerAddressRu">卖方地址 (俄语):</label>
+                    <textarea id="sellerAddressRu">2-й этаж, № 206, улица Хайцзяо , город Фэнцяо, город Чжуцзи ,город Шаосин ,провинция Чжэцзян.</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="sellerAddressEn">卖方地址 (英语):</label>
+                    <textarea id="sellerAddressEn">2nd floor, No. 206, Haijiao Road, Fengqiao Town, Zhuji Town, Shaoxing City, Zhejiang Province.</textarea>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="buyerAddressRu">买方地址 (俄语):</label>
+                    <textarea id="buyerAddressRu">141254, МОСКОВСКАЯ ОБЛАСТЬ, Г.О. ПУШКИНСКИЙ, Г ПУШКИНО, МКР. ЗАВЕТЫ ИЛЬИЧА, УЛ ЖЕЛЕЗНОДОРОЖНАЯ, Д. 6, ПОМЕЩ. 2, КОМ. 2</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="buyerAddressEn">买方地址 (英语):</label>
+                    <textarea id="buyerAddressEn">141254, Moscow Region, Pushkinsky Urban District, Pushkino, Zavety Ilyicha Neighborhood, Zheleznodorozhnaya Street, Building 6, Premises 2, Room 2</textarea>
+                </div>
+            </div>
+        </div>
         
-        <!-- 规格表介绍表格 -->
-        <table class="clause-table">
-            <tr>
-                <td style="width: 50%; border-right: 1px solid #000; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">${data.sellerNameRu} в лице Генерального директора ${data.sellerRepRu}, действующей на основании Устава, именуемая в дальнейшем «Продавец», с одной стороны, и ${data.buyerNameRu}, в лице Генерального директора ${data.buyerRepRu}, действующего на основании Устава, именуемое в дальнейшем «Покупатель», с другой стороны, заключили настоящий договор (далее -- Договор) о нижеследующем, именуемые вместе Стороны, заключили настоящее Дополнение на поставку деталей из нержавеющей стали, именуемых в дальнейшем Товар на следующих условиях</p>
-                </td>
-                <td style="width: 50%; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">Company "${data.sellerNameEn}" in the person of General Director ${data.sellerRepEn}, acting on the basis of Charter, hereinafter referred as «Seller», on the one part, and "${data.buyerNameEn}", Russia, in the person of General Director ${data.buyerRepEn}, acting on the basis of Charter, hereinafter referred to as the BUYER, on the other hand, have entered into this agreement (hereinafter referred to as the Agreement) on the following, together referred to as the Parties, have entered into this Supplement for the supply of stainless steel parts, hereinafter referred to as the Goods, on the following terms</p>
-                </td>
-            </tr>
-        </table>
+        <div class="buttons">
+            <button type="button" class="generate-btn" onclick="generateContract()">生成并下载合同文档</button>
+            <p class="note">系统将生成完全按照模板格式的双语合同Word文档，所有文案内容保持不变</p>
+        </div>
+    </div>
+
+    <script>
+        // 添加新产品行
+        function addProduct() {
+            const container = document.getElementById('products-container');
+            const newRow = document.createElement('div');
+            newRow.className = 'product-row';
+            newRow.innerHTML = `
+                <div class="product-field">
+                    <label>货物名称 (俄语):</label>
+                    <input type="text" class="product-name-ru" placeholder="货物名称俄语">
+                </div>
+                <div class="product-field">
+                    <label>货物名称 (英语):</label>
+                    <input type="text" class="product-name-en" placeholder="货物名称英语">
+                </div>
+                <div class="product-field">
+                    <label>型号/代码:</label>
+                    <input type="text" class="product-code" placeholder="产品型号">
+                </div>
+                <div class="product-field">
+                    <label>海关代码:</label>
+                    <input type="text" class="product-hs-code" placeholder="海关代码">
+                </div>
+                <div class="product-field">
+                    <label>数量 (шт):</label>
+                    <input type="number" class="product-quantity" value="1">
+                </div>
+                <div class="product-field">
+                    <label>单价 (CNY):</label>
+                    <input type="number" step="0.01" class="product-price" value="0.00">
+                </div>
+                <button type="button" class="remove-btn" onclick="removeProduct(this)">删除</button>
+            `;
+            container.appendChild(newRow);
+        }
         
-        <!-- 规格表1.1标题表格 -->
-        <table class="clause-table">
-            <tr>
-                <td style="width: 50%; border-right: 1px solid #000; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="section-title">1. Количество, график, условия поставки и оплаты, гарантии:</div>
-                    <div class="section-title">1.1 Цена, количество и стоимость Товара:</div>
-                </td>
-                <td style="width: 50%; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="section-title">1. Quantity, supply schedule, terms of supply and payment, guarantees:</div>
-                    <div class="section-title">1.1 Price, quantity and value of the goods:</div>
-                </td>
-            </tr>
-        </table>
+        // 删除产品行
+        function removeProduct(button) {
+            const container = document.getElementById('products-container');
+            const rows = container.getElementsByClassName('product-row');
+            if (rows.length > 1) {
+                const row = button.closest('.product-row');
+                row.remove();
+            } else {
+                alert('至少需要保留一个产品');
+            }
+        }
         
-        <!-- 产品表格 - 一个整体表格，不分左右栏 -->
-        <table class="full-width-table">
-            <thead>
+        // 收集产品数据
+        function getProductsData() {
+            const products = [];
+            const rows = document.querySelectorAll('.product-row');
+            
+            rows.forEach(row => {
+                const product = {
+                    nameRu: row.querySelector('.product-name-ru').value,
+                    nameEn: row.querySelector('.product-name-en').value,
+                    code: row.querySelector('.product-code').value,
+                    hsCode: row.querySelector('.product-hs-code').value,
+                    quantity: row.querySelector('.product-quantity').value,
+                    price: row.querySelector('.product-price').value,
+                    total: (parseFloat(row.querySelector('.product-quantity').value || 0) * parseFloat(row.querySelector('.product-price').value || 0)).toFixed(2)
+                };
+                products.push(product);
+            });
+            
+            return products;
+        }
+        
+        // 计算产品总计
+        function calculateTotal(products) {
+            return products.reduce((sum, product) => sum + parseFloat(product.total || 0), 0).toFixed(2);
+        }
+        
+        // 生成完整的Word文档
+        function generateContract() {
+            // 收集所有数据
+            const contractData = {
+                contractNo: document.getElementById('contractNo').value,
+                contractDate: document.getElementById('contractDate').value,
+                contractCity: document.getElementById('contractCity').value,
+                
+                sellerNameRu: document.getElementById('sellerNameRu').value,
+                sellerNameEn: document.getElementById('sellerNameEn').value,
+                sellerRepRu: document.getElementById('sellerRepRu').value,
+                sellerRepEn: document.getElementById('sellerRepEn').value,
+                sellerTitleRu: document.getElementById('sellerTitleRu').value,
+                sellerTitleEn: document.getElementById('sellerTitleEn').value,
+                
+                buyerNameRu: document.getElementById('buyerNameRu').value,
+                buyerNameEn: document.getElementById('buyerNameEn').value,
+                buyerRepRu: document.getElementById('buyerRepRu').value,
+                buyerRepEn: document.getElementById('buyerRepEn').value,
+                buyerTitleRu: document.getElementById('buyerTitleRu').value,
+                buyerTitleEn: document.getElementById('buyerTitleEn').value,
+                
+                products: getProductsData(),
+                totalAmount: calculateTotal(getProductsData()),
+                
+                sellerBankInfo: document.getElementById('sellerBankInfo').value,
+                sellerBankInfoEn: document.getElementById('sellerBankInfoEn').value,
+                buyerBankInfo: document.getElementById('buyerBankInfo').value,
+                buyerBankInfoEn: document.getElementById('buyerBankInfoEn').value,
+                
+                deliveryBasisRu: document.getElementById('deliveryBasisRu').value,
+                deliveryBasisEn: document.getElementById('deliveryBasisEn').value,
+                
+                sellerAddressRu: document.getElementById('sellerAddressRu').value,
+                sellerAddressEn: document.getElementById('sellerAddressEn').value,
+                buyerAddressRu: document.getElementById('buyerAddressRu').value,
+                buyerAddressEn: document.getElementById('buyerAddressEn').value,
+                
+                sellerTIN: "91330681MACJA2UU2G",
+                buyerTIN: "5038194700",
+                buyerKPP: "503801001",
+                buyerOGRN: "1255000098957"
+            };
+            
+            // 生成完整的Word文档HTML
+            const wordContent = generateWordContent(contractData);
+            
+            // 创建Blob并下载
+            const blob = new Blob(['\ufeff', wordContent], {
+                type: 'application/msword'
+            });
+            
+            // 创建下载链接
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `外贸合同_${contractData.contractNo}.doc`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            alert(`合同文档已生成并开始下载，文件名为: 外贸合同_${contractData.contractNo}.doc`);
+        }
+        
+        // 生成Word文档内容
+        function generateWordContent(data) {
+            // 创建产品表格行
+            let productTable = '';
+            
+            data.products.forEach(product => {
+                productTable += `
                 <tr>
-                    <th colspan="4" style="text-align: center; font-family: 'Times New Roman', serif; font-size: 10pt;">Русский</th>
-                    <th colspan="4" style="text-align: center; font-family: 'Times New Roman', serif; font-size: 10pt;">English</th>
-                </tr>
-                <tr>
-                    <th style="font-family: 'Times New Roman', serif; font-size: 10pt;">Наименование</th>
-                    <th style="font-family: 'Times New Roman', serif; font-size: 10pt;">Кол-во, шт</th>
-                    <th style="font-family: 'Times New Roman', serif; font-size: 10pt;">Цена за шт, CNY</th>
-                    <th style="font-family: 'Times New Roman', serif; font-size: 10pt;">Стоимость итого, CNY</th>
-                    <th style="font-family: 'Times New Roman', serif; font-size: 10pt;">Description</th>
-                    <th style="font-family: 'Times New Roman', serif; font-size: 10pt;">Quantity, pcs</th>
-                    <th style="font-family: 'Times New Roman', serif; font-size: 10pt;">Price per Unit, CNY</th>
-                    <th style="font-family: 'Times New Roman', serif; font-size: 10pt;">Total cost, CNY</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${productTable}
-            </tbody>
-        </table>
+                    <td>${product.nameRu}<br>${product.code}<br>${product.hsCode}</td>
+                    <td>${product.quantity}</td>
+                    <td>${product.price}</td>
+                    <td>${product.total}</td>
+                    <td>${product.nameEn}<br>${product.code}<br>${product.hsCode}</td>
+                    <td>${product.quantity}</td>
+                    <td>${product.price}</td>
+                    <td>${product.total}</td>
+                </tr>`;
+            });
+            
+            return `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <style>
+                    @page {
+                        size: A4;
+                        margin: 2cm;
+                    }
+                    body {
+                        font-family: 'Times New Roman', serif;
+                        font-size: 10pt;
+                        line-height: 1.2;
+                        margin: 0;
+                        padding: 0;
+                    }
+                    table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin: 10px 0;
+                        font-size: 9pt;
+                        border: 1px solid #000;
+                    }
+                    th, td {
+                        border: 1px solid #000;
+                        padding: 4px;
+                        vertical-align: top;
+                        text-align: left;
+                    }
+                    .contract-table {
+                        width: 100%;
+                        border: 1px solid #000;
+                    }
+                    .contract-table td {
+                        border: 1px solid #000;
+                        padding: 8px;
+                        vertical-align: top;
+                        width: 50%;
+                    }
+                    .contract-header {
+                        text-align: center;
+                        margin-bottom: 20px;
+                    }
+                    .contract-title {
+                        font-size: 12pt;
+                        font-weight: bold;
+                        margin-bottom: 5px;
+                    }
+                    .contract-subtitle {
+                        font-size: 10pt;
+                        margin-bottom: 10px;
+                    }
+                    .section-title {
+                        font-weight: bold;
+                        margin-top: 15px;
+                        margin-bottom: 5px;
+                        font-size: 10pt;
+                    }
+                    .clause-title {
+                        font-weight: bold;
+                        margin-top: 10px;
+                    }
+                    .signature-section {
+                        margin-top: 50px;
+                    }
+                    .signature-block {
+                        margin-top: 30px;
+                    }
+                    .bank-details {
+                        font-size: 9pt;
+                        line-height: 1.3;
+                    }
+                    .mark {
+                        background-color: #ffffcc;
+                        padding: 0 2px;
+                    }
+                    .page-break {
+                        page-break-after: always;
+                    }
+                    .full-width-table {
+                        width: 100%;
+                        border: 1px solid #000;
+                    }
+                    .left-column {
+                        width: 50%;
+                        padding-right: 10px;
+                        vertical-align: top;
+                    }
+                    .right-column {
+                        width: 50%;
+                        padding-left: 10px;
+                        vertical-align: top;
+                    }
+                    .clause-table {
+                        width: 100%;
+                        border: 1px solid #000;
+                        margin-bottom: 10px;
+                    }
+                    .clause-table td {
+                        border: 1px solid #000;
+                        padding: 8px;
+                        vertical-align: top;
+                        width: 50%;
+                    }
+                    .no-border-table {
+                        width: 100%;
+                        border: none;
+                    }
+                    .no-border-table td {
+                        border: none;
+                        padding: 0;
+                        vertical-align: top;
+                        width: 50%;
+                    }
+                    .separator {
+                        height: 30px;
+                        border: none;
+                    }
+                </style>
+            </head>
+            <body>
+                <!-- 合同头部表格 -->
+                <table class="clause-table">
+                    <tr>
+                        <td style="width: 50%; border-right: 1px solid #000; padding: 8px;">
+                            <div class="contract-header">
+                                <div class="contract-title">КОНТРАКТ № ${data.contractNo}</div>
+                                <div class="contract-subtitle">${data.contractDate}</div>
+                            </div>
+                        </td>
+                        <td style="width: 50%; padding: 8px;">
+                            <div class="contract-header">
+                                <div class="contract-title">CONTRACT № ${data.contractNo}</div>
+                                <div class="contract-subtitle">${data.contractDate.split(' / ')[1] || data.contractDate}</div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                
+                <!-- 合同介绍表格 -->
+                <table class="clause-table">
+                    <tr>
+                        <td style="width: 50%; border-right: 1px solid #000; padding: 8px;">
+                            <p>${data.sellerNameRu}, именуемая в дальнейшем "Продавец", в лице ${data.sellerTitleRu} ${data.sellerRepRu} с одной стороны, и ${data.buyerNameRu}, Россия, в лице ${data.buyerTitleRu} ${data.buyerRepRu}, именуемое в дальнейшем "Покупатель" действующего на основании устава, с другой стороны, заключили настоящий контракт о нижеследующем:</p>
+                        </td>
+                        <td style="width: 50%; padding: 8px;">
+                            <p>The company "${data.sellerNameEn}", China, hereinafter referred to as the "Seller", represented by ${data.sellerTitleEn} ${data.sellerRepEn}, on the one hand, and the ${data.buyerNameEn}, Russia, represented by ${data.buyerTitleEn} ${data.buyerRepEn}, hereinafter referred to as the "Buyer", acting on the basis of its Charter, on the other hand, have concluded this Contract as follows:</p>
+                        </td>
+                    </tr>
+                </table>
+                
+                <!-- 第1条表格 -->
+                <table class="clause-table">
+                    <tr>
+                        <td style="width: 50%; border-right: 1px solid #000; padding: 8px;">
+                            <div class="section-title">1. Предмет Контракта</div>
+                            <p>1.1. Продавец поставляет товары в ассортименте, в количестве и по ценам, определяемым в Приложениях к настоящему контракту, являющих его неотъемлемой частью.</p>
+                        </td>
+                        <td style="width: 50%; padding: 8px;">
+                            <div class="section-title">1. Subject of the Contract</div>
+                            <p>1.1. The Seller shall supply goods in the assortment, quantity, and at the prices specified in the Annexes to this Contract, which constitute its integral part.</p>
+                        </td>
+                    </tr>
+                </table>
+                
+                <!-- 第2条表格 -->
+                <table class="clause-table">
+                    <tr>
+                        <td style="width: 50%; border-right: 1px solid #000; padding: 8px;">
+                            <div class="section-title">2. Цена и общая сумма контракта</div>
+                            <p>2.1. Цены на товары выражены в китайских юанях.</p>
+                            <p>2.2. По согласованию сторон данный Контракт не имеет общей стоимости (Цены). Цены на товары устанавливаются в Приложении к настоящему Контракту и Инвойсе для каждой отдельной партии товара.</p>
+                        </td>
+                        <td style="width: 50%; padding: 8px;">
+                            <div class="section-title">2. Price and Total Contract Amount</div>
+                            <p>2.1. Prices of goods are expressed in Chinese yuan (CNY).</p>
+                            <p>2.2. By agreement of the parties, this Contract has no total price (Price). Prices for goods are set in the Appendix to this Contract and the Invoice for each individual batch of goods.</p>
+                        </td>
+                    </tr>
+                </table>
+                
+                <!-- 第3条表格 -->
+                <table class="clause-table">
+                    <tr>
+                        <td style="width: 50%; border-right: 1px solid #000; padding: 8px;">
+                            <div class="section-title">3. Условия платежа</div>
+                            <p>3.1. Платеж по настоящему контракту осуществляется Покупателем в течение 90 (девяноста) календарных дней с момента выставления инвойса и подтверждения отгрузки.</p>
+                            <p>3.2. Товар оплачивается Покупателем в следующем порядке: Покупатель оплачивает напрямую на банковский счёт Продавца, указанный в настоящем Контракте.</p>
+                            <p>3.3. В связи с международными санкциями, по соглашению между Покупателем и Продавцом любая из сторон может назначить агента в соответствии с агентским соглашением для получения и оплаты через агента.</p>
+                            <p>3.4. После подписания сторонами Приложения расходы, связанные с его изменением и/или дополнением по инициативе Покупателя, возлагаются на Покупателя.</p>
+                        </td>
+                        <td style="width: 50%; padding: 8px;">
+                            <div class="section-title">3. Payment Terms</div>
+                            <p>3.1. Payment under this Contract shall be made by the Buyer within 90 (ninety) calendar days from the date of invoice issuance and shipment confirmation.</p>
+                            <p>3.2. The goods shall be paid for by the Buyer in the following manner: The Buyer shall make payments directly to the Seller's bank account specified in this Contract.</p>
+                            <p>3.3. Due to international sanctions, by agreement between the Buyer and the Seller, either party may appoint an agent pursuant to an agency agreement for the receipt and payment through the agent.</p>
+                            <p>3.4. After the Appendix is signed by the parties, any expenses related to its amendment and/or supplementation at the initiative of the Buyer shall be borne by the Buyer.</p>
+                        </td>
+                    </tr>
+                </table>
+                
+                <!-- 第4条表格 -->
+                <table class="clause-table">
+                    <tr>
+                        <td style="width: 50%; border-right: 1px solid #000; padding: 8px;">
+                            <div class="section-title">4. Техническая документация</div>
+                            <p>4.1. С даты заказа Продавец обязан передать Покупателю следующую техническую документацию:</p>
+                            <p>4.1.1. Описание Товара.</p>
+                            <p>4.1.2. Условия испытаний Товара.</p>
+                            <p>4.1.3. Инструкции по монтажу, наладке, пуску в эксплуатацию, обслуживанию, регулировке, смазке и ремонту Товара.</p>
+                            <p>4.4. Вся техническая документация (инструкции, технические условия и др.) должна быть выполнена на английском или китайском языке.</p>
+                        </td>
+                        <td style="width: 50%; padding: 8px;">
+                            <div class="section-title">4. Technical Documentation</div>
+                            <p>4.1. From the date of order, the Seller shall provide the Buyer with the following technical documentation:</p>
+                            <p>4.1.1. Description of the Goods.</p>
+                            <p>4.1.2. Terms of testing the Goods.</p>
+                            <p>4.1.3. Instructions for installation, adjustment, commissioning, maintenance, regulation, lubrication, and repair of the Goods.</p>
+                            <p>4.1.4. All technical documentation (instructions, technical specifications, etc.) shall be provided in English or Chinese.</p>
+                        </td>
+                    </tr>
+                </table>
+                
+                <!-- 第5条表格 -->
+                <table class="clause-table">
+                    <tr>
+                        <td style="width: 50%; border-right: 1px solid #000; padding: 8px;">
+                            <div class="section-title">5. Качество Товара</div>
+                            <p>5.1. Качество Товара должно соответствовать действующим стандартам, действующим в стране Покупателя для данного вида оборудования.</p>
+                            <p>5.2. Подтверждением качества со стороны Продавца является сертификат качества изготовителя Товара, который Продавец обязан предоставить Покупателю одновременно с поставкой Товара.</p>
+                        </td>
+                        <td style="width: 50%; padding: 8px;">
+                            <div class="section-title">5. Quality of the Goods</div>
+                            <p>5.1. The quality of the Goods shall comply with the applicable standards in the Buyer's country for this type of equipment.</p>
+                            <p>5.2. The Seller's confirmation of quality shall be the manufacturer's quality certificate, which the Seller is obliged to provide to the Buyer simultaneously with the delivery of the Goods.</p>
+                        </td>
+                    </tr>
+                </table>
+                
+                <!-- 第6条表格 -->
+                <table class="clause-table">
+                    <tr>
+                        <td style="width: 50%; border-right: 1px solid #000; padding: 8px;">
+                            <div class="section-title">6. Сроки и условия поставки</div>
+                            <p>6.1. Товар поставляется партиями по согласованному сторонами графику на условиях EXW, FCA, FOB, CIF, CPT, DAP, DDP, которые определяются в предварительных счетах и приложениях для каждой отдельной партии товара.</p>
+                            <p>6.2. Датой заказа Товара Покупателем считается день подписания приложения.</p>
+                            <p>6.3. Товар должен быть готов к поставке не позднее чем через 60 календарных дней после подписания приложения.</p>
+                            <p>6.4. О конкретной дате поставки Продавец письменно извещает Покупателя. Дата поставки считается согласованной сторонами, если Продавец получил от Покупателя соответствующее письменное подтверждение. Указанные в настоящем пункте извещения (подтверждения) должны быть изложены на русском языке и направлены посредством факсимильной или электронной почты по адресам (телефонам), указанным в Контракте. Сторона, получившая соответствующее извещение, обязана незамедлительно подтвердить факт его получения.</p>
+                            <p>6.5. Датой поставки Товара считается день подписания Покупателем или перевозчиком Покупателя товарно-транспортной накладной после погрузки. Товар поставляется транспортом на условиях поставки, согласованных в Спецификации. Определение и интерпретация терминов условий поставки осуществляются в соответствии с Международными правилами «Инкотермс-2010».</p>
+                            <p>6.6. Если отдельные условия Контракта противоречат условиям Международных правил «Инкотермс-2010», преимущественную силу имеют условия Контракта.</p>
+                            <p>6.7. Покупатель отвечает за погрузку Товара по согласованным условиям согласно пункту 6.1. При этом Продавец не несёт ответственности за несвоевременную отгрузку по причинам, не зависящим от Продавца (например, неприбытие или несвоевременное прибытие транспорта под погрузку), задержку на таможне воздушного судна, перевозящего Товар, а также за связанные с этим убытки Покупателя.</p>
+                            <p>6.8. Продавец обязан письменно (факсимильной или электронной почтой) сообщить Покупателю об отгрузке в течение двадцати четырёх часов с момента её завершения и получения квитанции от грузоперевозчика.</p>
+                            <p>6.9. Приёмка Товара по количеству и качеству осуществляется Покупателем в порядке, установленном законодательством, действующим на территории Китая.</p>
+                            <p>6.10. Продавец должен предоставить Покупателю (или перевозчику Покупателя) вместе с Товаром следующую документацию:</p>
+                            <p>6.10.1. Инвойс;</p>
+                            <p>6.10.2. Упаковочный лист;</p>
+                            <p>6.10.3. Копию экспортной декларации.</p>
+                        </td>
+                        <td style="width: 50%; padding: 8px;">
+                            <div class="section-title">6. Delivery Terms and Conditions</div>
+                            <p>6.1. The Goods shall be delivered in batches according to the schedule agreed by the parties on the terms EXW, FCA, FOB, CIF, CPT, DAP, DDP, which are specified in the pro forma invoices and appendices for each individual batch of goods.</p>
+                            <p>6.2. The order date of the Goods by the Buyer is considered the date of signing the appendix.</p>
+                            <p>6.3. The Goods shall be ready for delivery no later than 60 calendar days after signing the appendix.</p>
+                            <p>6.4. The Seller shall notify the Buyer in writing of the specific delivery date. The delivery date shall be deemed agreed upon by the parties once the Seller receives the corresponding written confirmation from the Buyer. Such notices (confirmations) mentioned in this clause shall be provided in Russian and sent via fax or email to the addresses (phone numbers) specified in the Contract. The party receiving such notice must promptly confirm its receipt.</p>
+                            <p>6.5. The delivery date of the Goods shall be considered the day when the Buyer or the Buyer's carrier signs the consignment note after loading. The Goods shall be delivered by transport under the delivery terms agreed in the Specification. The definition and interpretation of delivery terms shall be in accordance with the International Commercial Terms "Incoterms 2010."</p>
+                            <p>6.6. If any provisions of the Contract contradict the terms of the International Commercial Terms "Incoterms 2010," the provisions of the Contract shall prevail.</p>
+                            <p>6.7. The Buyer is responsible for loading the Goods under the agreed terms according to clause 6.1. The Seller shall not be liable for delayed shipment due to reasons beyond the Seller's control (e.g., failure or untimely arrival of transport for loading), customs delay of the aircraft transporting the Goods, as well as related losses of the Buyer.</p>
+                            <p>6.8. The Seller shall notify the Buyer in writing (via fax or email) of the shipment within twenty-four hours after its completion and receipt of the receipt from the carrier.</p>
+                            <p>6.9. Acceptance of the Goods in terms of quantity and quality shall be carried out by the Buyer in accordance with the laws applicable in the territory of China.</p>
+                            <p>6.10. The Seller shall provide the Buyer (or the Buyer's carrier) with the following documents along with the Goods:</p>
+                            <p>6.10.1. Invoice;</p>
+                            <p>6.10.2. Packing list;</p>
+                            <p>6.10.3. Copy of the export declaration.</p>
+                        </td>
+                    </tr>
+                </table>
+                
+                <!-- 第7条表格 -->
+                <table class="clause-table">
+                    <tr>
+                        <td style="width: 50%; border-right: 1px solid #000; padding: 8px;">
+                            <div class="section-title">7. Гарантийные обязательства Продавца</div>
+                            <p>7.1. Продавец гарантирует отсутствие дефектов Товара в течение одного года с даты получения Товара Покупателем.</p>
+                            <p>7.2. Никакое оборудование из перечисленного груза не должно быть возвращено на ремонт или замену Продавцу без письменного разрешения последнего. Все гарантийные требования должны быть предоставлены Продавцу в письменной форме.</p>
+                            <p>7.3. Настоящие гарантийные обязательства не покрывают дефекты и повреждения, вызванные несанкционированными Продавцом переделками, неправильными ремонтными работами или техническим обслуживанием, проведёнными Покупателем или третьими лицами без согласия Продавца, а так же неправильной эксплуатацией оборудования перечисленного груза Покупателем. Ремонт, произведённый без письменного согласия Продавца не оплачивается.</p>
+                            <p>7.4. Продавец не предоставляет гарантий, кроме прямо сформулированных в Контракте, и не гарантирует исполнение заверений и обещаний, высказанных в устной или письменной форме не уполномоченных на то агентов и/или работников Продавца.</p>
+                            <p>7.5. Оборудование из перечисленного груза должно эксплуатироваться в соответствии с инструкциями, изданными Продавцом и доведенными до Покупателя. В противном случае настоящие гарантийные обязательства являются недействительными.</p>
+                        </td>
+                        <td style="width: 50%; padding: 8px;">
+                            <div class="section-title">7. Warranty obligations of the Seller</div>
+                            <p>7.1. The Seller guarantees the absence of defects in the Goods for one year from the date of receipt of the Goods by the Buyer.</p>
+                            <p>7.2. No equipment from the listed cargo should be returned for repair or replacement to the Seller without the written permission of the latter. All warranty claims must be provided to the Seller in writing.</p>
+                            <p>7.3. These warranty obligations do not cover defects and damages caused by alterations unauthorized by the Seller, improper repairs or maintenance performed by the Buyer or third parties without the Seller's consent, as well as improper operation of the equipment listed by the Buyer. Repairs made without the Seller's written consent will not be paid for.</p>
+                            <p>7.4. The Seller does not provide guarantees other than those expressly stated in the Contract, and does not guarantee the fulfillment of assurances and promises expressed orally or in writing by unauthorized agents and/or employees of the Seller.</p>
+                            <p>7.5. Equipment from the listed cargo must be operated in accordance with the instructions issued by the Seller and communicated to the Buyer. Otherwise, these warranty obligations are invalid.</p>
+                        </td>
+                    </tr>
+                </table>
+                
+                <!-- 第8条表格 -->
+                <table class="clause-table">
+                    <tr>
+                        <td style="width: 50%; border-right: 1px solid #000; padding: 8px;">
+                            <div class="section-title">8. Ответственность сторон</div>
+                            <p>8.1. В случае отмены заказа Покупателем по причинам, не связанным с нарушением Продавцом принятых на себя по Контракту обязательств, сумма полученного Продавцом аванса Покупателю не возвращается.</p>
+                            <p>8.2. Если Продавец по причинам, не зависящим от Покупателя, задержал срок поставки Товара более чем на 15 календарных дней от согласованной сторонами даты поставки, указанной в п. 6.4. настоящего Контракта, Покупатель вправе расторгнуть Контракт в одностороннем порядке. При этом денежные средства, предварительно уплаченные Покупателем за Товар, должны быть перечислены Продавцом на расчетный счет Покупателя не позднее пяти рабочих дней с момента получения Продавцом соответствующего письменного уведомления от Покупателя.</p>
+                            <p>8.3. В случае нарушения Продавцом обязанности по возврату денежных средств Покупателю, предусмотренной п. 8.2. Контракта. Продавец обязан по требованию Покупателя выплатить последнему пению в размере 0,15 процента от суммы задолженности за каждый день просрочки. Общий размер пени, предусмотренной в настоящем пункте, не может превышать 25 % от цены Товара.</p>
+                            <p>8.4. Продавец несет ответственность перед Покупателем за порчу Товара из-за некачественной или ненадлежащей консервации и упаковки, а также за убытки, связанные с отправкой Товара не по адресу из-за неполноценной или неправильной маркировки.</p>
+                        </td>
+                        <td style="width: 50%; padding: 8px;">
+                            <div class="section-title">8. Liability of the parties</div>
+                            <p>8.1. In case of cancellation of the order by the Buyer for reasons unrelated to the violation of contractual obligations by the Seller, the amount of the advance received by the Seller will not be refunded to the Buyer.</p>
+                            <p>8.2. If, for reasons beyond the Buyer's control, the Seller has delayed the delivery of the Goods by more than 15 calendar days from the delivery date agreed by the parties specified in clause 6.4. of this Contract, the Buyer has the right to terminate the Contract unilaterally. In this case, the funds previously paid by the Buyer for the Goods must be transferred by the Seller to the Buyer's current account no later than five business days after the Seller receives the relevant written notification from the Buyer.</p>
+                            <p>8.3. In case of violation by the Seller of the obligation to refund funds to the Buyer provided for in clause 8.2. of the Contract. The Seller is obliged, at the request of the Buyer, to pay the last song in the amount of 0.15 percent of the amount owed for each day of delay. The total amount of the penalty provided for in this paragraph may not exceed 25% of the price of the Goods.</p>
+                            <p>8.4. The Seller is liable to the Buyer for damage to the Goods due to poor-quality or improper preservation and packaging, as well as for losses related to the shipment of the Goods to the wrong address due to defective or incorrect labeling.</p>
+                        </td>
+                    </tr>
+                </table>
+                
+                <!-- 第9条表格 -->
+                <table class="clause-table">
+                    <tr>
+                        <td style="width: 50%; border-right: 1px solid #000; padding: 8px;">
+                            <div class="section-title">9. Форс-мажор</div>
+                            <p>9.1. Стороны освобождаются от ответственности за частичное или полное неисполнение обязательств по Контракту, если такое неисполнение вызвано наступлением обстоятельства непреодолимой силы (пожар, наводнение, землетрясение, запрещение импорта или экспорта, а также иные причины, которые не могут контролироваться сторонами).</p>
+                            <p>9.2. По согласованию сторон срок исполнения обязательств по Контракту отодвигается соразмерно времени, в течение которого действовало обстоятельство непреодолимой силы.</p>
+                            <p>9.3. Сторона, на территории которой случилось обстоятельство непреодолимой силы, обязана в течение 10 (десять) дней с момента возникновения такового письменно известить другую сторону о характере непреодолимой силы и ее влияния на исполнение Контракта.</p>
+                        </td>
+                        <td style="width: 50%; padding: 8px;">
+                            <div class="section-title">9. Force Majeure</div>
+                            <p>9.1. The Parties are released from liability for partial or complete non-fulfillment of obligations under the Contract if such non-fulfillment is caused by the occurrence of force majeure (fire, flood, earthquake, prohibition of import or export, as well as other reasons that cannot be controlled by the parties).</p>
+                            <p>9.2. By agreement of the parties, the deadline for fulfillment of obligations according to the Contract, it is postponed in proportion to the time during which the force majeure circumstance was in effect.</p>
+                            <p>9.3. The Party in whose territory the force majeure event occurred is obliged to notify the other party in writing about the nature of the force majeure and its impact on the performance of the Contract within 10 (ten) days from the date of occurrence.</p>
+                        </td>
+                    </tr>
+                </table>
+                
+                <!-- 第10条表格 -->
+                <table class="clause-table">
+                    <tr>
+                        <td style="width: 50%; border-right: 1px solid #000; padding: 8px;">
+                            <div class="section-title">10. Срок действия Контракта</div>
+                            <p>10.1. Контракт вступает в силу с момента подписания его сторонами и действует до 31 декабря 2025 г.</p>
+                            <p>10.2. В том случае, если не менее чем за 14 (четырнадцать) дней до истечения срока действия настоящего Договора ни одна из сторон не заявит о своем намерении расторгнуть Договор, его действие автоматически пролонгируется на каждый последующий календарный год.</p>
+                        </td>
+                        <td style="width: 50%; padding: 8px;">
+                            <div class="section-title">10. Term of the Contract</div>
+                            <p>10.1. The Contract comes into force from the moment it is signed by the parties and is valid until December 31, 2025.</p>
+                            <p>10.2. In the event that none of the parties declares its intention to terminate the Contract at least 14 (fourteen) days before the expiration of this Agreement, its effect is automatic it is extended for each subsequent calendar year.</p>
+                        </td>
+                    </tr>
+                </table>
+                
+                <!-- 第11条表格 -->
+                <table class="clause-table">
+                    <tr>
+                        <td style="width: 50%; border-right: 1px solid #000; padding: 8px;">
+                            <div class="section-title">11. Применимое право, арбитраж</div>
+                            <p>11.1. Правом, регулирующим Контракт, является материальное право Российской Федерации.</p>
+                            <p>11.2. Все споры и разногласия, которые могут возникнуть по Контракту или в связи с его исполнением, будут по возможности разрешаться путем переговоров между сторонами. Сторона, получившая Претензию, должна ее рассмотреть и направить другой стороне письменный мотивированный ответ течение 7 (семи) календарных дней с момента получения претензии.</p>
+                            <p>11.3. В случае если стороны не придут к соглашению, спор подлежит разрешению в Международном коммерческом арбитражном суде при торгово-промышленной палате Китая в соответствии с Арбитражным процессуальным кодексом Китая.</p>
+                        </td>
+                        <td style="width: 50%; padding: 8px;">
+                            <div class="section-title">11. Applicable law, arbitration</div>
+                            <p>11.1. The law governing the Contract is the substantive law of the Russian Federation.</p>
+                            <p>11.2. All disputes and disagreements that may arise under the Contract or in connection with its execution will, if possible, be resolved through negotiations between the parties. The party receiving the Claim must review it and send a written reasoned response to the other party within 7 (seven) calendar days from the date of receipt of the claim.</p>
+                            <p>11.3. If the parties do not reach an agreement, the dispute is subject to resolution in the International Commercial Arbitration Court at the Chinese Chamber of Commerce and Industry in accordance with the Arbitration Procedure Code of China.</p>
+                        </td>
+                    </tr>
+                </table>
+                
+                <!-- 第12条表格 -->
+                <table class="clause-table">
+                    <tr>
+                        <td style="width: 50%; border-right: 1px solid #000; padding: 8px;">
+                            <div class="section-title">12. Прочие условия</div>
+                            <p>12.1. Условия Контракта имеют равную обязательную силу для сторон и могут быть изменены по взаимному согласию с обязательным составлением письменного документа.</p>
+                            <p>12.2. Ни одна из сторон не вправе передать свои права по Контракту третьей стороне без письменного согласия другой стороне.</p>
+                            <p>12.3. Контракт составлен на русском и китайском языке в двух экземплярах, по одному для каждой из сторон.</p>
+                            <p>12.4. Стороны обязуются незамедлительно письменно извещать друг друга о всех изменениях своих банковских и отгрузочных реквизитов.</p>
+                        </td>
+                        <td style="width: 50%; padding: 8px;">
+                            <div class="section-title">12. Other terms</div>
+                            <p>12.1. The terms of the Contract are equally binding on the parties and may be amended by mutual agreement with the mandatory preparation of a written document.</p>
+                            <p>12.2. Neither party has the right to transfer its rights under the Contract to a third party without the written consent of the other party.</p>
+                            <p>12.3. The Contract is drawn up in Russian and Chinese in two copies, one for each of the parties.</p>
+                            <p>12.4. The parties undertake to immediately notify each other in writing of all changes to their bank and shipping details.</p>
+                        </td>
+                    </tr>
+                </table>
+                
+                <!-- 第13部分 - 地址、银行信息和签名 -->
+                <div class="page-break"></div>
+                
+                <!-- 第13条标题表格 - 左右分开 -->
+                <table class="clause-table">
+                    <tr>
+                        <td style="width: 50%; border-right: 1px solid #000; padding: 8px;">
+                            <div class="section-title">13. Адреса, реквизиты и подписи сторон</div>
+                        </td>
+                        <td style="width: 50%; padding: 8px;">
+                            <div class="section-title">13. Address, details and signatures of the parties</div>
+                        </td>
+                    </tr>
+                </table>
+                
+                <!-- 卖方信息表格 -->
+                <table class="clause-table">
+                    <tr>
+                        <td style="width: 50%; border-right: 1px solid #000; padding: 8px;">
+                            <p><strong>Продавец: ${data.sellerNameRu}</strong></p>
+                            <div class="bank-details">
+                                <p>Юр.адрес: ${data.sellerAddressRu}</p>
+                                <p>ИНН: ${data.sellerTIN}</p>
+                                <p>${data.sellerBankInfo}</p>
+                                <p>Адрес банка: 2503-2505, Шанхайская башня, № 501, Мидл Иньчэн Роуд, Новый район Пудун, Шанхай. Китай</p>
+                            </div>
+                            <br><br><br>
+                            <p>Поставщик: ___________________________</p>
+                            <p>Генеральный директор (подпись): ___________________________</p>
+                            <p>${data.sellerRepRu}</p>
+                            <p>М.П.</p>
+                        </td>
+                        <td style="width: 50%; padding: 8px;">
+                            <p><strong>Seller: ${data.sellerNameEn}</strong></p>
+                            <div class="bank-details">
+                                <p>Legal address: ${data.sellerAddressEn}</p>
+                                <p>TIN: ${data.sellerTIN}</p>
+                                <p>${data.sellerBankInfoEn}</p>
+                                <p>Bank Address: 2503-2505, Shanghai Tower, No. 501, Middle Yincheng Road, Pudong New Area, Shanghai, China</p>
+                            </div>
+                            <br><br><br>
+                            <p>Supplier (stamped): ___________________________</p>
+                            <p>General Manager (Signature): ___________________________</p>
+                            <p>${data.sellerRepEn}</p>
+                            <p>М.P.</p>
+                        </td>
+                    </tr>
+                </table>
+                
+                <!-- 买方信息表格 -->
+                <table class="clause-table">
+                    <tr>
+                        <td style="width: 50%; border-right: 1px solid #000; padding: 8px;">
+                            <p><strong>Покупатель: ${data.buyerNameRu}</strong></p>
+                            <div class="bank-details">
+                                <p>ИНН: ${data.buyerTIN}</p>
+                                <p>КПП: ${data.buyerKPP}</p>
+                                <p>ОГРН: ${data.buyerOGRN}</p>
+                                <p>Юридический адрес: ${data.buyerAddressRu}</p>
+                                <p><strong>Банковские реквизиты:</strong></p>
+                                <p>${data.buyerBankInfo}</p>
+                            </div>
+                            <br><br><br>
+                            <p>Покупатель: ___________________________</p>
+                            <p>Генеральный директор (подпись): ___________________________</p>
+                            <p>${data.buyerRepRu}</p>
+                            <p>М.П.</p>
+                        </td>
+                        <td style="width: 50%; padding: 8px;">
+                            <p><strong>Buyer: ${data.buyerNameEn}</strong></p>
+                            <div class="bank-details">
+                                <p>INN: ${data.buyerTIN}</p>
+                                <p>KPP: ${data.buyerKPP}</p>
+                                <p>OGRN: ${data.buyerOGRN}</p>
+                                <p>Legal address: ${data.buyerAddressEn}</p>
+                                <p><strong>Bank details:</strong></p>
+                                <p>${data.buyerBankInfoEn}</p>
+                            </div>
+                            <br><br><br>
+                            <p>Buyer (stamped): ___________________________</p>
+                            <p>General Manager (Signature): ___________________________</p>
+                            <p>${data.buyerRepEn}</p>
+                            <p>М.P.</p>
+                        </td>
+                    </tr>
+                </table>
+                
+                <!-- 分隔空白 -->
+                <div class="separator"></div>
+                
+                <!-- 规格表标题表格 -->
+                <table class="clause-table">
+                    <tr>
+                        <td style="width: 50%; border-right: 1px solid #000; padding: 8px;">
+                            <div class="contract-header">
+                                <div class="contract-title">Спецификация № 1</div>
+                                <div class="contract-subtitle">к договору поставки №${data.contractNo} от 30.12.2025г. Москва, Россия</div>
+                            </div>
+                        </td>
+                        <td style="width: 50%; padding: 8px;">
+                            <div class="contract-header">
+                                <div class="contract-title">Specification №1</div>
+                                <div class="contract-subtitle">to supply agreement No.${data.contractNo} от 30.12.2025 Moscow, Russia</div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                
+                <!-- 规格表介绍表格 -->
+                <table class="clause-table">
+                    <tr>
+                        <td style="width: 50%; border-right: 1px solid #000; padding: 8px;">
+                            <p>${data.sellerNameRu} в лице Генерального директора ${data.sellerRepRu}, действующей на основании Устава, именуемая в дальнейшем «Продавец», с одной стороны, и ${data.buyerNameRu}, в лице Генерального директора ${data.buyerRepRu}, действующего на основании Устава, именуемое в дальнейшем «Покупатель», с другой стороны, заключили настоящий договор (далее -- Договор) о нижеследующем, именуемые вместе Стороны, заключили настоящее Дополнение на поставку деталей из нержавеющей стали, именуемых в дальнейшем Товар на следующих условиях</p>
+                        </td>
+                        <td style="width: 50%; padding: 8px;">
+                            <p>Company "${data.sellerNameEn}" in the person of General Director ${data.sellerRepEn}, acting on the basis of Charter, hereinafter referred as «Seller», on the one part, and "${data.buyerNameEn}", Russia, in the person of General Director ${data.buyerRepEn}, acting on the basis of Charter, hereinafter referred to as the BUYER, on the other hand, have entered into this agreement (hereinafter referred to as the Agreement) on the following, together referred to as the Parties, have entered into this Supplement for the supply of stainless steel parts, hereinafter referred to as the Goods, on the following terms</p>
+                        </td>
+                    </tr>
+                </table>
+                
+                <!-- 规格表1.1标题表格 -->
+                <table class="clause-table">
+                    <tr>
+                        <td style="width: 50%; border-right: 1px solid #000; padding: 8px;">
+                            <div class="section-title">1. Количество, график, условия поставки и оплаты, гарантии:</div>
+                            <div class="section-title">1.1 Цена, количество и стоимость Товара:</div>
+                        </td>
+                        <td style="width: 50%; padding: 8px;">
+                            <div class="section-title">1. Quantity, supply schedule, terms of supply and payment, guarantees:</div>
+                            <div class="section-title">1.1 Price, quantity and value of the goods:</div>
+                        </td>
+                    </tr>
+                </table>
+                
+                <!-- 产品表格 - 一个整体表格，不分左右栏 -->
+                <table class="full-width-table">
+                    <thead>
+                        <tr>
+                            <th colspan="4" style="text-align: center;">Русский</th>
+                            <th colspan="4" style="text-align: center;">English</th>
+                        </tr>
+                        <tr>
+                            <th>Наименование</th>
+                            <th>Кол-во, шт</th>
+                            <th>Цена за шт, CNY</th>
+                            <th>Стоимость итого, CNY</th>
+                            <th>Description</th>
+                            <th>Quantity, pcs</th>
+                            <th>Price per Unit, CNY</th>
+                            <th>Total cost, CNY</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${productTable}
+                    </tbody>
+                </table>
+                
+                <!-- 规格表1.2表格 -->
+                <table class="clause-table">
+                    <tr>
+                        <td style="width: 50%; border-right: 1px solid #000; padding: 8px;">
+                            <div class="section-title">1.2 Условия и график поставки:</div>
+                            <p>Базис поставки (Incoterms 2020): ${data.deliveryBasisRu}</p>
+                        </td>
+                        <td style="width: 50%; padding: 8px;">
+                            <div class="section-title">1.2 Terms and supply schedule:</div>
+                            <p>Supply basis (Incoterms 2020): ${data.deliveryBasisEn}</p>
+                        </td>
+                    </tr>
+                </table>
+                
+                <!-- 规格表1.3表格 -->
+                <table class="clause-table">
+                    <tr>
+                        <td style="width: 50%; border-right: 1px solid #000; padding: 8px;">
+                            <div class="section-title">1.3 Условия оплаты:</div>
+                            <p>- 0% предоплаты, 100% оплата в течение 90 дней после прибытия в РФ.</p>
+                        </td>
+                        <td style="width: 50%; padding: 8px;">
+                            <div class="section-title">1.3 Payment terms:</div>
+                            <p>- 0% prepayment, 100% payment within 90 days after arrival to Russian Federation.</p>
+                        </td>
+                    </tr>
+                </table>
+                
+                <!-- 规格表第2条表格 -->
+                <table class="clause-table">
+                    <tr>
+                        <td style="width: 50%; border-right: 1px solid #000; padding: 8px;">
+                            <div class="section-title">2. Спецификация вступает в силу после подписания обеими сторонами.</div>
+                        </td>
+                        <td style="width: 50%; padding: 8px;">
+                            <div class="section-title">2. The Specification shall come into force from the date of its signing by both Parties.</div>
+                        </td>
+                    </tr>
+                </table>
+                
+                <!-- 签名表格 -->
+                <table class="clause-table">
+                    <tr>
+                        <td style="width: 50%; border-right: 1px solid #000; padding: 8px;">
+                            <div class="signature-section">
+                                <p><strong>Покупатель / The Buyer</strong></p>
+                                <p>${data.buyerNameRu}</p>
+                                <p><strong>Генеральный директор/General manager</strong></p>
+                                <p>${data.buyerRepRu}</p>
+                                <br><br><br>
+                                <p>___________________________</p>
+                                <p>М.П.</p>
+                            </div>
+                        </td>
+                        <td style="width: 50%; padding: 8px;">
+                            <div class="signature-section">
+                                <p><strong>Продавец / The Seller</strong></p>
+                                <p>${data.sellerNameEn}</p>
+                                <p><strong>Генеральный директор/General manager</strong></p>
+                                <p>${data.sellerRepEn}</p>
+                                <br><br><br>
+                                <p>___________________________</p>
+                                <p>М.P.</p>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </body>
+            </html>`;
+        }
         
-        <!-- 规格表1.2表格 -->
-        <table class="clause-table">
-            <tr>
-                <td style="width: 50%; border-right: 1px solid #000; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="section-title">1.2 Условия и график поставки:</div>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">Базис поставки (Incoterms 2020): ${data.deliveryBasisRu}</p>
-                </td>
-                <td style="width: 50%; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="section-title">1.2 Terms and supply schedule:</div>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">Supply basis (Incoterms 2020): ${data.deliveryBasisEn}</p>
-                </td>
-            </tr>
-        </table>
-        
-        <!-- 规格表1.3表格 -->
-        <table class="clause-table">
-            <tr>
-                <td style="width: 50%; border-right: 1px solid #000; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="section-title">1.3 Условия оплаты:</div>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">- 0% предоплаты, 100% оплата в течение 90 дней после прибытия в РФ.</p>
-                </td>
-                <td style="width: 50%; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="section-title">1.3 Payment terms:</div>
-                    <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">- 0% prepayment, 100% payment within 90 days after arrival to Russian Federation.</p>
-                </td>
-            </tr>
-        </table>
-        
-        <!-- 规格表第2条表格 -->
-        <table class="clause-table">
-            <tr>
-                <td style="width: 50%; border-right: 1px solid #000; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="section-title">2. Спецификация вступает в силу после подписания обеими сторонами.</div>
-                </td>
-                <td style="width: 50%; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="section-title">2. The Specification shall come into force from the date of its signing by both Parties.</div>
-                </td>
-            </tr>
-        </table>
-        
-        <!-- 签名表格 -->
-        <table class="clause-table">
-            <tr>
-                <td style="width: 50%; border-right: 1px solid #000; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="signature-section">
-                        <p style="font-family: 'Times New Roman', serif; font-size: 10pt; font-weight: bold;">Покупатель / The Buyer</p>
-                        <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">${data.buyerNameRu}</p>
-                        <p style="font-family: 'Times New Roman', serif; font-size: 10pt; font-weight: bold;">Генеральный директор/General manager</p>
-                        <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">${data.buyerRepRu}</p>
-                        <br><br><br>
-                        <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">___________________________</p>
-                        <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">М.П.</p>
-                    </div>
-                </td>
-                <td style="width: 50%; padding: 8px; font-family: 'Times New Roman', serif; font-size: 10pt;">
-                    <div class="signature-section">
-                        <p style="font-family: 'Times New Roman', serif; font-size: 10pt; font-weight: bold;">Продавец / The Seller</p>
-                        <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">${data.sellerNameEn}</p>
-                        <p style="font-family: 'Times New Roman', serif; font-size: 10pt; font-weight: bold;">Генеральный директор/General manager</p>
-                        <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">${data.sellerRepEn}</p>
-                        <br><br><br>
-                        <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">___________________________</p>
-                        <p style="font-family: 'Times New Roman', serif; font-size: 10pt;">М.P.</p>
-                    </div>
-                </td>
-            </tr>
-        </table>
-    </body>
-    </html>`;
-}
+        // 初始化时添加示例产品
+        document.addEventListener('DOMContentLoaded', function() {
+            // 可以在这里添加更多初始化产品
+            addProduct();
+            addProduct();
+            
+            // 设置第二个产品的默认值
+            const productRows = document.querySelectorAll('.product-row');
+            if (productRows.length > 1) {
+                const secondRow = productRows[1];
+                secondRow.querySelector('.product-name-ru').value = "СКАТЕРТЬ ИЗ ПОЛИЭСТЕРА";
+                secondRow.querySelector('.product-name-en').value = "POLYESTER TABLECLOTH";
+                secondRow.querySelector('.product-code').value = "WTC-FM-Natural-120x150";
+                secondRow.querySelector('.product-hs-code').value = "6302539000";
+                secondRow.querySelector('.product-quantity').value = "5102";
+                secondRow.querySelector('.product-price').value = "10.67";
+            }
+        });
+    </script>
+</body>
+</html>
